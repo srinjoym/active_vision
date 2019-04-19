@@ -1,4 +1,5 @@
 from cv_bridge import CvBridge
+import math
 
 class ExtendedImage:
   def __init__(self, image, pose):
@@ -28,3 +29,6 @@ class ImagePose:
 
   def is_valid(self):
     return self.pan_pose and self.tilt_pose
+
+  def covers_same_patch(self, p2):
+    return math.fabs(self.pan_pose - p2.pan_pose) < 0.1 and math.fabs(self.tilt_pose - p2.tilt_pose) < 0.02

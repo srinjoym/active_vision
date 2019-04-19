@@ -9,7 +9,7 @@ class FGSubtractor:
   def __init__(self, image_topic, output_topic = "/fg_subtract/image_color"):
     print("Starting Init for FGSubtractor")
 
-    self.fgbg = cv2.createBackgroundSubtractorMOG2(history = 50, detectShadows = True)
+    self.fgbg = cv2.createBackgroundSubtractorMOG2(history = 200, detectShadows = False)
 
     image_sub = rospy.Subscriber(image_topic, Image, self.image_callback, queue_size=5, buff_size=52428800)
     self.output_pub = rospy.Publisher(output_topic, Image, queue_size=5)
@@ -35,7 +35,7 @@ class FGSubtractor:
     self.output_pub.publish(msg)
 
 def main():
-  FGSubtractor(image_topic="/kinect2/qhd/image_color")
+  FGSubtractor(image_topic="/image_stitcher/image_color")
 
 if __name__ == '__main__':
   rospy.init_node('fg_subtractor', anonymous=True)

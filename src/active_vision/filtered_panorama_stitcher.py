@@ -49,14 +49,15 @@ class FilteredPanoramaStitcher(PanoramaStitcher):
   def update_image_buffer(self, ext_img):
     if not ext_img.pose.is_valid(): return
 
-    if len(self.image_buffer) < 1 or self.is_new_pose(ext_img.pose):
-      # if (len(self.image_buffer) > 1):
-        # self.filter_buffer(cv_img, pose, timestamp)
-      print "added image"
-      self.image_buffer.append(ext_img)
-      return True
-    else:
-      return False
+    # if len(self.image_buffer) < 1 or self.is_new_pose(ext_img.pose):
+    if (len(self.image_buffer) > 1):
+      self.filter_buffer(ext_img)
+    
+    print "added image"
+    self.image_buffer.append(ext_img)
+    return True
+    # else:
+    #   return False
 
   def is_new_pose(self, pose):
     for ext_img in self.image_buffer:
@@ -69,16 +70,10 @@ class FilteredPanoramaStitcher(PanoramaStitcher):
 
   def filter_buffer(self, new_ext_img):
     for idx, ext_img in enumerate(self.image_buffer):
-      # Find ROI between these two images
-      if metadata["pose"] != pose:
-        roi = self.find_roi(metadata["pose"], pose)
-        self.image_buffer[index] = image[:, image.shape[1] - int(roi):image.shape[1]]
-        # if (roi != 0):
-        #   # There is overlap between the images, need to crop old image
-        #   if (roi > 0):
-        #     image = image[:, 0:image.shape[1]*roi]
-        #   else:
-        #     image = image[:, image.shape[1]*(roi]
+      # Update panorama if new image in same position (within delta)
+      if new_ext_img.pose.covers_same_patch(ext_img.pose):
+        print "removed image"
+        self.image_buffer.remove(ext_img)
 
   def find_roi(self, p1, p2):
     fy = 525
