@@ -16,15 +16,15 @@ class ExtendedImage:
     return msg
 
 class ImagePose:
-  def __init__(pan_pose = None, tilt_pose = None):
+  def __init__(self, pan_pose = None, tilt_pose = None):
     self.pan_pose = pan_pose
     self.tilt_pose = tilt_pose
 
-  def set_pan_pose(pose):
+  def set_pan_pose(self, pose):
     self.pan_pose = pose
 
-  def set_tilt_pose(pose):
-    self.tile_pose = pose
+  def set_tilt_pose(self, pose):
+    self.tilt_pose = pose
 
   def is_valid(self):
     return self.pan_pose and self.tilt_pose

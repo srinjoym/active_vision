@@ -11,12 +11,10 @@ from dynamixel_msgs.msg import JointState
 
 from extended_image import ExtendedImage, ImagePose
 from panorama_stitcher import PanoramaStitcher
-from pan_tilt_controller import PanTiltController
-
 
 class FilteredPanoramaStitcher(PanoramaStitcher):
   def __init__(self, image_topic, pan_state_topic, tilt_state_topic, output_topic = "/image_stitcher/image_color"):
-    super.__init__(image_topic, output_topic)
+    PanoramaStitcher.__init__(self, image_topic, output_topic)
     print("Starting Init for ImageStitcher")
 
     self.image_buffer = []
@@ -43,17 +41,18 @@ class FilteredPanoramaStitcher(PanoramaStitcher):
         print "Failed to stitch image buffer"
 
   def pan_pose_callback(self, pose):
-    self.current_pose.set_pan_pose(pose)
+    self.current_pose.set_pan_pose(pose.current_pos)
 
   def tilt_pose_callback(self, pose):
-    self.current_pose.set_tilt_pose(pose)
+    self.current_pose.set_tilt_pose(pose.current_pos)
 
   def update_image_buffer(self, ext_img):
-    if not ext_img.cv_img().is_valid(): return
+    if not ext_img.pose.is_valid(): return
 
     if len(self.image_buffer) < 1 or self.is_new_pose(ext_img.pose):
       # if (len(self.image_buffer) > 1):
         # self.filter_buffer(cv_img, pose, timestamp)
+      print "added image"
       self.image_buffer.append(ext_img)
       return True
     else:
@@ -64,7 +63,7 @@ class FilteredPanoramaStitcher(PanoramaStitcher):
       pan_delta = math.fabs(pose.pan_pose - ext_img.pose.pan_pose)
       tilt_delta = math.fabs(pose.tilt_pose - ext_img.pose.tilt_pose)
 
-      if pan_delta < 0.1 or tilt_delta < 0.02: return False
+      if pan_delta < 0.1 and tilt_delta < 0.02: return False
 
     return True
 
@@ -93,7 +92,8 @@ class FilteredPanoramaStitcher(PanoramaStitcher):
 
 def main():
   # TODO: Make these rosparams
-  image_topic = "/webcam/image_raw"
+  image_topic = "/kinect2/qhd/image_color"
+  # image_topic = "/fg_subtract/image_color"
   pan_topic = "/pan_controller/state"
   tilt_topic = "/tilt_controller/state"
 

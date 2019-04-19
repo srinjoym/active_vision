@@ -34,7 +34,7 @@ class PanoramaStitcher:
     self.output_pub.publish(msg)
 
 def main():
-  PanoramaStitcher(image_topic="/webcam/image_raw")
+  PanoramaStitcher(image_topic="/kinect2/qhd/image_color")
 
 if __name__ == '__main__':
   rospy.init_node('panorama_stitcher', anonymous=True)

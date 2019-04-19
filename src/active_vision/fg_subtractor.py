@@ -22,11 +22,20 @@ class FGSubtractor:
 
     self.fgbg.apply(cv_img)
 
-    bg_model = CvBridge().cv2_to_imgmsg(self.fgbg.getBackgroundImage(),"bgr8")
-    self.output_pub.publish(bg_model)
+    self.publish_image(self.fgbg.getBackgroundImage(), img.header.frame_id)
+
+  def publish_image(self, img, frame_id=None):
+    msg = CvBridge().cv2_to_imgmsg(img, "bgr8")
+
+    # if frame_id:
+    #   msg.header.frame_id = frame_id
+
+    msg.header.frame_id = "kinect2_rgb_optical_frame"
+
+    self.output_pub.publish(msg)
 
 def main():
-  FGSubtractor(image_topic="/webcam/image_raw")
+  FGSubtractor(image_topic="/kinect2/qhd/image_color")
 
 if __name__ == '__main__':
   rospy.init_node('fg_subtractor', anonymous=True)
