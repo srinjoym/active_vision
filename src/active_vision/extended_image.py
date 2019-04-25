@@ -31,4 +31,4 @@ class ImagePose:
     return self.pan_pose and self.tilt_pose
 
   def covers_same_patch(self, p2):
-    return math.fabs(self.pan_pose - p2.pan_pose) < 0.1 and math.fabs(self.tilt_pose - p2.tilt_pose) < 0.02
+    return math.fabs(self.pan_pose - p2.pan_pose) < 0.075 and math.fabs(self.tilt_pose - p2.tilt_pose) < 0.02

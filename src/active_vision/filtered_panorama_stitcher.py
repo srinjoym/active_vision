@@ -37,6 +37,7 @@ class FilteredPanoramaStitcher(PanoramaStitcher):
 
       if panorama != None: # Successfully stitched buffer
         self.publish_image(panorama)
+        print "Images in buffer: {0}".format(len(self.image_buffer))
       else:
         print "Failed to stitch image buffer"
 
@@ -53,7 +54,6 @@ class FilteredPanoramaStitcher(PanoramaStitcher):
     if (len(self.image_buffer) > 1):
       self.filter_buffer(ext_img)
     
-    print "added image"
     self.image_buffer.append(ext_img)
     return True
     # else:
@@ -72,7 +72,6 @@ class FilteredPanoramaStitcher(PanoramaStitcher):
     for idx, ext_img in enumerate(self.image_buffer):
       # Update panorama if new image in same position (within delta)
       if new_ext_img.pose.covers_same_patch(ext_img.pose):
-        print "removed image"
         self.image_buffer.remove(ext_img)
 
   def find_roi(self, p1, p2):
