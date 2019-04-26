@@ -3,7 +3,7 @@ import rospy
 from std_msgs.msg import Float64
 from dynamixel_msgs.msg import JointState
 
-class PanTiltDemo:
+class PanTiltDriver:
     def __init__(self):
         print("Starting Init for PanTiltDemo")
 
@@ -33,7 +33,7 @@ class PanTiltDemo:
 
 
 def main():
-    pt = PanTiltDemo()
+    pt = PanTiltDriver()
 
     pt.tilt_cmd(0.2)
 
