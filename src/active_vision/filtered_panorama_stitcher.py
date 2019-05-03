@@ -81,7 +81,7 @@ class FilteredPanoramaStitcher():
     # if len(self.image_buffer) < 1 or self.is_new_pose(ext_img.pose):
     if (len(self.image_buffer) > 1):
       self.filter_buffer(ext_img)
-    
+
     self.image_buffer.append(ext_img)
     return True
     # else:
