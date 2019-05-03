@@ -1,3 +1,4 @@
+import bgs
 import cv2
 import rospy
 import numpy as np
@@ -9,7 +10,7 @@ class FGSubtractor:
   def __init__(self, image_topic, output_topic = "/fg_subtract/image_color"):
     print("Starting Init for FGSubtractor")
 
-    self.fgbg = cv2.createBackgroundSubtractorMOG2(history = 200, detectShadows = False)
+    self.fgbg = bgs.LBFuzzyAdaptiveSOM()
 
     image_sub = rospy.Subscriber(image_topic, Image, self.image_callback, queue_size=5, buff_size=52428800)
     self.output_pub = rospy.Publisher(output_topic, Image, queue_size=5)
@@ -22,7 +23,7 @@ class FGSubtractor:
 
     self.fgbg.apply(cv_img)
 
-    self.publish_image(self.fgbg.getBackgroundImage(), img.header.frame_id)
+    self.publish_image(self.fgbg.getBackgroundModel(), img.header.frame_id)
 
   def publish_image(self, img, frame_id=None):
     msg = CvBridge().cv2_to_imgmsg(img, "bgr8")

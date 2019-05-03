@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="exp_name"/>
+	<arg name="image_topic_name" default="/kinect2/qhd/image_color"/>
+	<arg name="data_dir" default="/media/psf/SrinjoySSD1/ROS_VM/catkin_ws/src/active_vision/data"/>
+
+	<param name="image_topic_name" value="$(arg image_topic_name)"/>
+	<param name="active_vision_data_dir" value="$(arg data_dir)"/>
+
+	<node name="fg_loc_subtractor" pkg="active_vision" type="fg_loc_subtractor.py" output="screen" cwd="node"></node>
+  <node name="filtered_panorama_stitcher" pkg="active_vision" type="filtered_panorama_stitcher.py" output="screen" cwd="node"></node>
+	<node name="active_vision_scene_recorder" pkg="active_vision" type="active_vision_scene_recorder.py" output="screen" cwd="node">\
+    <param name="file_name" value="$(arg exp_name)">
+  </node>
+
+	<node name="pan_tilt_study" pkg="active_vision" type="pan_tilt_study.py" output="screen" cwd="node"></node>
+</launch>

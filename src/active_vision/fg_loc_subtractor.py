@@ -45,20 +45,20 @@ class FGBGSSubtractor:
 def main():
   # FGBGSSubtractor(image_topic="/kinect2/qhd/image_color")
 
-  pt_driver = PanTiltDriver() 
+  pt_driver = PanTiltDriver()
   pt_driver.tilt_cmd(0.15)
 
   locations = [-0.5, -0.25, 0, 0.25, 0.5]
-  
+
   fgsub = FGBGSSubtractor("kinect2/qhd/image_color", locations)
 
-  while not rospy.is_shutdown():
-    for idx, loc in enumerate(locations):
-      # pt_driver.pan_cmd(loc)
-      print("Moving to {0}").format(loc)
-      # rospy.sleep(2)
-      go_to_loc(loc, pt_driver)
-      rospy.sleep(2)
+  # while not rospy.is_shutdown():
+  #   for idx, loc in enumerate(locations):
+  #     # pt_driver.pan_cmd(loc)
+  #     print("Moving to {0}").format(loc)
+  #     # rospy.sleep(2)
+  #     go_to_loc(loc, pt_driver)
+  #     rospy.sleep(2)
 
 def go_to_loc(loc, pt):
   while (abs(pt.pan_pose-loc) > 0.1) and not rospy.is_shutdown():
