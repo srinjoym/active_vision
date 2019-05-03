@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<launch>
+<arg name="image_topic_name" default="/kinect2/qhd/image_color"/>
+
+	<param name="image_topic_name" value="$(arg image_topic_name)"/>
+
+	<node name="fg_loc_subtractor" pkg="active_vision" type="fg_loc_subtractor.py" output="screen" cwd="node"></node>
+  <node name="filtered_panorama_stitcher" pkg="active_vision" type="filtered_panorama_stitcher.py" output="screen" cwd="node"></node>
+</launch>

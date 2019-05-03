@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import bgs
 import cv2
 import rospy
@@ -7,14 +9,14 @@ from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 from pan_tilt_driver import PanTiltDriver
 
-class FGBGSSubtractor:
+class FGLocSubtractor:
   def __init__(self, image_topic, positions,output_topic = "/fg_subtract/image_color"):
     print("Starting Init for FGSubtractor")
 
     self.pt_driver = PanTiltDriver()
 
     self.positions = positions
-    self.fg_subtractors = map(lambda _: bgs.LBFuzzyAdaptiveSOM(), positions)
+    self.fg_subtractors = map(lambda _: bgs.AdaptiveBackgroundLearning(), positions)
 
     image_sub = rospy.Subscriber(image_topic, Image, self.image_callback, queue_size=5, buff_size=52428800)
 
@@ -45,12 +47,9 @@ class FGBGSSubtractor:
 def main():
   # FGBGSSubtractor(image_topic="/kinect2/qhd/image_color")
 
-  pt_driver = PanTiltDriver()
-  pt_driver.tilt_cmd(0.15)
-
   locations = [-0.5, -0.25, 0, 0.25, 0.5]
 
-  fgsub = FGBGSSubtractor("kinect2/qhd/image_color", locations)
+  fgsub = FGLocSubtractor("kinect2/qhd/image_color", locations)
 
   # while not rospy.is_shutdown():
   #   for idx, loc in enumerate(locations):
@@ -67,7 +66,7 @@ def go_to_loc(loc, pt):
 
 
 if __name__ == '__main__':
-  rospy.init_node('fg_subtractor', anonymous=True)
+  rospy.init_node('fg_loc_subtractor', anonymous=True)
   main()
   while not rospy.is_shutdown():
     rospy.spin()

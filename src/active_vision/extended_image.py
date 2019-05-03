@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from cv_bridge import CvBridge
 import math
 

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import bgs
 import cv2
 import rospy
@@ -52,10 +54,10 @@ def main():
   go_to_loc(0, study.pt)
 
   raw_input("Completed Ground Truth recording, enter scene and press Enter")
+  print "Starting recording..."
   rospy.sleep(10)
 
-  print "Recording Panorama again..."
-
+  print "Recording discrete panorama again..."
   for idx, loc in enumerate(locations):
     print("Moving to {0}").format(loc)
     go_to_loc(loc, study.pt)
@@ -65,7 +67,6 @@ def main():
   for idx, loc in enumerate(locations):
     print("Moving to {0}").format(loc)
     go_to_loc(loc, study.pt)
-    rospy.sleep(1)
 
   study.stop_record()
   print "Finished recording"

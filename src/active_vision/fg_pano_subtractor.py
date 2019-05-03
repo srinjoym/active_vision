@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import bgs
 import cv2
 import rospy

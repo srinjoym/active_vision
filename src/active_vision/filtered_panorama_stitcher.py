@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import cv2
 import os
 import rospy
@@ -117,9 +119,9 @@ class FilteredPanoramaStitcher():
 
     if panorama != None: # Successfully stitched buffer
       self.publish_image(panorama)
-      print "Images in buffer: {0}".format(len(self.image_buffer))
-    else:
-      print "Failed to stitch image buffer"
+      # print "Images in buffer: {0}".format(len(self.image_buffer))
+    # else:
+      # print "Failed to stitch image buffer"
 
   def publish_image(self, img):
     msg = CvBridge().cv2_to_imgmsg(img, "bgr8")

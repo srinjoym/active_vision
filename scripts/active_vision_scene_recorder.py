@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import cv2
 import rospy
 import numpy as np
@@ -5,6 +7,7 @@ import os
 import subprocess
 import signal
 import psutil
+import atexit
 from datetime import datetime
 
 from sensor_msgs.msg import Image
@@ -15,7 +18,7 @@ class ActiveVisionSceneRecorder:
   def __init__(self, data_dir):
     print "Starting Init RecordActiveVisionScene"
 
-    rospy.Service('start_record', Record, self.start_record)
+    rospy.Service('start_record', Empty, self.start_record)
     rospy.Service('stop_record',Empty, self.stop_record)
 
     self.topics = ["/kinect2/qhd/image_color", "/pan_controller/state", "/tilt_controller/state"]
@@ -32,13 +35,11 @@ class ActiveVisionSceneRecorder:
     p.wait()  # we wait for children to terminate
 
   def start_record(self,msg):
-    if not msg.file_name:
-      file_name = datetime.now().strftime("%Y-%m-%d-%H:%M:%S")
-    else:
-      file_name = msg.file_name
+    file_name = rospy.get_param("/active_vision_scene_recorder/file_name")
+
     print "recording video {0}.bag".format(file_name)
     topics = " ".join(self.topics)
-    command = "rosbag record -O {data_dir}/{file_name}.bag -b 1000 {topics}".format(data_dir=self.data_dir,
+    command = "rosbag record -j -O {data_dir}/{file_name}.bag -b 1000 {topics}".format(data_dir=self.data_dir,
         file_name=file_name,topics=topics)
     print command
     self.process = subprocess.Popen(
@@ -47,7 +48,7 @@ class ActiveVisionSceneRecorder:
     )
     return []
 
-  def stop_record(self, msg):
+  def stop_record(self, msg=None):
     self.record = False
     self.terminate_process_and_children(self.process)
     print "finished record"
@@ -55,10 +56,10 @@ class ActiveVisionSceneRecorder:
 
 
 def main():
-  data_dir = "/media/psf/SrinjoySSD1/ROS_VM/catkin_ws/src/active_vision/data"
+  data_dir = rospy.get_param("/active_vision_data_dir")
 
   obj = ActiveVisionSceneRecorder(data_dir = data_dir)
-  # atexit.register(obj.close_video)
+  atexit.register(obj.stop_record)
 
 
 if __name__ == '__main__':
